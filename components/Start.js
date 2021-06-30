@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ImageBackground,  TouchableOpacity } from 'react-native';
 
 export default class Home extends Component {
   constructor(props){
@@ -49,6 +49,10 @@ export default class Home extends Component {
           </View>
           <TouchableOpacity title="Go to Chat" style={styles.startBttn,{backgroundColor: this.state.backColor}}
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, backColor: this.state.backColor })}
+            accessible={true}
+            accessibilityLabel="Start Chat"
+            accessibilityHint="This lets you enter the chat with the username provided in the input."
+            accessibilityRole="button"
           > 
           <Text style={styles.startText}>Let's Chat!</Text>
           </TouchableOpacity>
