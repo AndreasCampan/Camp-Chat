@@ -6,7 +6,7 @@
 Welcome to my chat app called **Camp-Chat** ! My objective is to build a chat app for mobile devices using React Native. 
 
 # What will it do?
-The app will provide users with a chat interface and options to share images as well as their location.
+The app will provide users with a chat interface and options to share images as well as their location. Users can enter their name and choose a background colour for the chat screen. Data is stored on the client-side and available when the user is offline.
 
 
 # Stack, Dependencies, Environment, Hosting
