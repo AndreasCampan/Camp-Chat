@@ -73,7 +73,7 @@ export default class Chat extends Component {
 
     const messages = [];
     // go through each document
-    querySnapshot.forEach( async (doc) => {
+    querySnapshot.forEach((doc) => {
       // get the QueryDocumentSnapshot's data
       const data = doc.data();
       messages.push({
