@@ -12,9 +12,10 @@ export default class Chat extends Component {
         messages: [],
         user: {
           _id: '',
-          user: ''
+          name: ''
         },
         uid: 0,
+        backColor: ''
       }
 
     const firebaseConfig = {
@@ -30,7 +31,7 @@ export default class Chat extends Component {
     if (!firebase.apps.length){
       firebase.initializeApp(firebaseConfig);
     } 
-
+    this.referenceMessages = firebase.firestore().collection('messages');
     LogBox.ignoreLogs([
       'Setting a timer'
     ]);
@@ -38,25 +39,30 @@ export default class Chat extends Component {
 
   componentDidMount() {
     const username = this.props.route.params.username;
+    const backColor = this.props.route.params.backColor;
+    console.log(backColor)
     this.props.navigation.setOptions({ title: `${username}'s Chat` });
-
-    this.referenceMessages = firebase.firestore().collection('messages');
 
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
       }
       this.setState({
+        backColor: backColor,
         uid: user.uid,
-        user: username,
+        user: {
+          _id: user.uid,
+          name: username,
+        },
+
         messages: [{
           _id: 2,
           text: `Welcome to the chat ${username}`,
           createdAt: new Date(),
-          system: true,
          },
       ],
       });
+      this.addMessages()
       this.unsubscribe = this.referenceMessages
         .orderBy("createdAt", "desc")
         .onSnapshot(this.onCollectionUpdate);
@@ -91,25 +97,6 @@ export default class Chat extends Component {
     });
   };
 
-  onSend = (messages = []) => {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }),
-    () => {
-      this.addMessages();
-    })
-  }
-
-  renderBubble(props) {
-    return (
-      <Bubble {...props}
-        wrapperStyle={{
-          right: { backgroundColor: this.props.route.params.backColor }
-        }}
-      />
-    )
-  }
-
   addMessages = () => {
     const username = this.props.route.params.username;
     const messages = this.state.messages[0];
@@ -124,13 +111,38 @@ export default class Chat extends Component {
       })
   };
 
+  onSend = (messages = []) => {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }),
+    () => {
+      this.addMessages();
+    })
+  }
+
+  renderBubble(props) {
+    return (
+      <Bubble {...props}
+        wrapperStyle={{
+          right: { 
+            backgroundColor: this.props.route.params.backColor,
+            color: '#FFF' 
+          },
+          left: { 
+            backgroundColor: '#cccfcd'
+          }
+        }}
+      />
+    )
+  }
+
   render() {
     return (
       <View style={{flex: 1}}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
-          user={this.state.user.name}
+          user={this.state.user}
           renderUsernameOnMessage={true}
           onSend={messages => this.onSend(messages)}
         />
