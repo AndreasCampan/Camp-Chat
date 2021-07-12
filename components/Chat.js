@@ -186,10 +186,12 @@ export default class Chat extends Component {
     }
   }
 
+  // enables custom buttons like the additional options
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
   };
 
+  // custom view for the maps
   renderCustomView = (props) => {
     const { currentMessage } = props;
     if (currentMessage.location) {

@@ -8,15 +8,15 @@ import firebase from 'firebase';
 
 export default class CustomActions extends React.Component {
   imagePicker = async () => {
-    // expo permission
+    // Expo asking for permission
     const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
     try {
       if (status === "granted") {
         // pick image
         const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images, // only images are allowed
+          mediaTypes: ImagePicker.MediaTypeOptions.Images, // select only images
         }).catch((error) => console.log(error));
-        // canceled process
+        //If the process is cancelled
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
@@ -28,6 +28,7 @@ export default class CustomActions extends React.Component {
   };
   
   takePhoto = async () => {
+     // Expo asking for permission
     const { status } = await Permissions.askAsync(
       Permissions.CAMERA,
       Permissions.MEDIA_LIBRARY
@@ -50,6 +51,7 @@ export default class CustomActions extends React.Component {
 
   getLocation = async () => {
     try {
+       // Expo asking for permission
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status === "granted") {
         const result = await Location.getCurrentPositionAsync(
@@ -98,10 +100,6 @@ export default class CustomActions extends React.Component {
     return await snapshot.ref.getDownloadURL();
   };
 
-  /**
-   * function that handles communication features
-   * @function onActionPress
-   */
   onActionPress = () => {
     const options = [
       "Choose From Library",
@@ -131,7 +129,6 @@ export default class CustomActions extends React.Component {
     );
   };
 
-  //render function
   render() {
     return (
       <TouchableOpacity
